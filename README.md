@@ -1,29 +1,35 @@
 This lab demonstrates an end-to-end data preprocessing pipeline built using Azure Databricks and Azure Data Lake Storage Gen2.
 
-In this project, I implemented the Medallion Architecture approach:
+The goal of this lab was to implement a Medallion Architecture pipeline (Bronze, Silver, Gold) using Spark in a cloud environment.
 
-Bronze layer: Raw Amazon Electronics reviews and metadata were stored in Azure Data Lake Storage Gen2.
-Silver layer: The reviews dataset was cleaned by removing null values and extracting useful fields such as review_year. Then, it was enriched by joining it with the product metadata dataset (asin, title, brand, price).
-Gold layer: A curated dataset was created for analytics purposes and saved to the curated layer in ADLS Gen2.
+In the Bronze layer, raw Amazon Electronics reviews and product metadata were stored in Azure Data Lake Storage Gen2. These datasets were accessed from Databricks using storage account credentials and the ABFSS protocol.
 
-I created separate notebooks for each step:
+In the Silver layer, the reviews dataset was cleaned using PySpark. Null values were removed, unnecessary fields were dropped, and a new column called review_year was extracted from the review timestamp. Then, the cleaned reviews were enriched by joining them with the metadata dataset (asin, title, brand, price) using a left join in Spark.
 
-01_load_and_clean_reviews: loads raw reviews and performs data cleaning.
+In the Gold layer, a curated dataset was created for analytics purposes and saved in parquet format to the curated container. Parquet was used because it is a columnar storage format optimized for big data processing in Spark.
 
-02_enrich_with_metadata: joins cleaned reviews with product metadata.
+The implementation was divided into separate notebooks:
 
-03_write_gold_features_v1: writes the curated Gold dataset.
+01_load_and_clean_reviews: loads raw data and performs cleaning operations using Spark transformations.
 
-04_gold_visualizations: performs data analysis and creates visualizations.
+02_enrich_with_metadata: selects relevant metadata columns and joins them with the reviews dataset.
 
-I also created a Databricks Job to automate the pipeline and configured a schedule (then paused it to avoid unnecessary costs).
+03_write_gold_features_v1: writes the final curated dataset to the Gold layer.
 
-For analysis, I generated:
+04_gold_visualizations: performs analysis and creates visualizations using Matplotlib and Seaborn.
 
-A rating distribution visualization.
+A Databricks Job was created to automate the pipeline execution. A schedule was configured to demonstrate production readiness, and then paused to avoid unnecessary cloud costs.
 
-A top 10 brands by average rating visualization.
+The following technologies were used:
 
-Technologies used in this lab include Azure Databricks, PySpark, Azure Data Lake Storage Gen2, Matplotlib, and Seaborn.
+Azure Databricks for distributed data processing
 
-This lab demonstrates how to build, automate, and analyze a scalable cloud-based data processing pipeline.
+Apache Spark (PySpark) for large-scale transformations
+
+Azure Data Lake Storage Gen2 for cloud storage
+
+Parquet format for efficient storage
+
+Matplotlib and Seaborn for visualization
+
+This lab demonstrates how to build, automate, and analyze a scalable cloud-based data engineering workflow.
